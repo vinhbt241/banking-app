@@ -11,8 +11,11 @@ import FormFieldTextInput from "./FormFieldTextInput"
 import { Loader2 } from "lucide-react"
 import { authFormSchema } from "@/lib/utils"
 import FormFieldDateInput from "./FormFieldDateInput"
+import { signIn, signUp } from "@/lib/actions/user.actions"
+import { useRouter } from "next/navigation"
 
 const AuthForm = ({ type }: AuthFormProps) => {
+  const router = useRouter()
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -22,11 +25,48 @@ const AuthForm = ({ type }: AuthFormProps) => {
     defaultValues: {
       email: "",
       password: "",
+      firstName: "",
+      lastName: "",
+      address1: "",
+      city: "",
+      state: "",
+      postalCode: "",
+      dateOfBirth: "",
+      ssn: "",
     },
   })
 
   const onSubmit = async (data: FieldValues) => {
     setIsLoading(true)
+    try {
+      if (type === "sign-up") {
+        const userData = {
+          firstName: data.firstName!,
+          lastName: data.lastName!,
+          address1: data.address1!,
+          city: data.city!,
+          state: data.state!,
+          postalCode: data.postalCode!,
+          dateOfBirth: data.dateOfBirth!,
+          ssn: data.ssn!,
+          email: data.email,
+          password: data.password,
+        }
+        const newUser = await signUp(userData)
+        setUser(newUser)
+      }
+      if (type === "sign-in") {
+        const response = await signIn({
+          email: data.email,
+          password: data.password,
+        })
+        if (response) router.push("/")
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
