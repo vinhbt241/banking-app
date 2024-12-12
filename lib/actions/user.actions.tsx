@@ -81,11 +81,24 @@ export async function getLoggedInUser() {
     const { account } = await createSessionClient()
     const result = await account.get()
 
-    const user = await getUserInfo({ userId: result.$id })
+    // const user = await getUserInfo({ userId: result.$id })
 
-    return parseStringify(user)
+    return parseStringify(result)
   } catch (error) {
     console.log(error)
+    return null
+  }
+}
+
+export const logoutAccount = async () => {
+  try {
+    const { account } = await createSessionClient()
+
+    const nextCookies = await cookies()
+    nextCookies.delete("appwrite-session")
+
+    await account.deleteSession("current")
+  } catch (error) {
     return null
   }
 }
