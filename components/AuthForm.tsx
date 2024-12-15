@@ -15,12 +15,12 @@ import { signIn, signUp } from "@/lib/actions/user.actions"
 import { useRouter } from "next/navigation"
 import PlaidLink from "./PlaidLink"
 
-const AuthForm = ({ type }: AuthFormProps) => {
+const AuthForm = ({ formType }: AuthFormProps) => {
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const formSchema = authFormSchema(type)
+  const formSchema = authFormSchema(formType)
   const form = useForm<FieldValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,9 +38,10 @@ const AuthForm = ({ type }: AuthFormProps) => {
   })
 
   const onSubmit = async (data: FieldValues) => {
+    console.log("submit clicked")
     setIsLoading(true)
     try {
-      if (type === "sign-up") {
+      if (formType === "sign-up") {
         const userData = {
           firstName: data.firstName!,
           lastName: data.lastName!,
@@ -56,7 +57,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         const newUser = await signUp(userData)
         setUser(newUser)
       }
-      if (type === "sign-in") {
+      if (formType === "sign-in") {
         const response = await signIn({
           email: data.email,
           password: data.password,
@@ -87,7 +88,11 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
         <div className="flex flex-col gap-1 md:gap-3">
           <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
-            {user ? "Link Account" : type === "sign-in" ? "Sign In" : "Sign Up"}
+            {user
+              ? "Link Account"
+              : formType === "sign-in"
+              ? "Sign In"
+              : "Sign Up"}
             <p className="text-16 font-normal text-gray-600">
               {user
                 ? "Link your account to get started"
@@ -104,7 +109,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         <>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              {type === "sign-up" && (
+              {formType === "sign-up" && (
                 <>
                   <div className="flex gap-4">
                     <FormFieldTextInput
@@ -183,7 +188,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
                       <Loader2 size={20} className="animate-spin" /> &nbsp;
                       Loading...
                     </>
-                  ) : type === "sign-in" ? (
+                  ) : formType === "sign-in" ? (
                     "Sign In"
                   ) : (
                     "Sign Up"
@@ -195,15 +200,15 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
           <footer className="flex justify-center gap-1">
             <p className="text-14 font-normal text-gray-600">
-              {type === "sign-in"
+              {formType === "sign-in"
                 ? "Don't have an account?"
                 : "Already have an account?"}
             </p>
             <Link
-              href={type === "sign-in" ? "/sign-up" : "/sign-in"}
+              href={formType === "sign-in" ? "/sign-up" : "/sign-in"}
               className="form-link"
             >
-              {type === "sign-in" ? "Sign up" : "Sign in"}
+              {formType === "sign-in" ? "Sign up" : "Sign in"}
             </Link>
           </footer>
         </>

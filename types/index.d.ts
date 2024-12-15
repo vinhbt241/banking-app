@@ -88,7 +88,7 @@ declare type Bank = {
   accessToken: string
   fundingSourceUrl: string
   userId: string
-  sharableId: string
+  shareableId: string
 }
 
 declare type AccountTypes =
@@ -188,7 +188,7 @@ declare interface PlaidLinkProps {
 // };
 
 declare interface AuthFormProps {
-  type: "sign-in" | "sign-up"
+  formType: "sign-in" | "sign-up"
 }
 
 declare interface BankDropdownProps {
