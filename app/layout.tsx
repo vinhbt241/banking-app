@@ -11,8 +11,8 @@ const ibmPlexSerif = IBM_Plex_Serif({
 })
 
 export const metadata: Metadata = {
-  title: "VinBank",
-  description: "VinBank is a modern banking platform for everyone. ",
+  title: "Horizon",
+  description: "Horizon is a modern banking platform for everyone. ",
   icons: {
     icon: "/icon/logo.svg",
   },
